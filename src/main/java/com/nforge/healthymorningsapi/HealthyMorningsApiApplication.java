@@ -1,4 +1,4 @@
-package com.nforge.healthymornings.healthymorningsapi;
+package com.nforge.healthymorningsapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
