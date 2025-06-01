@@ -7,9 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 
-@Entity @NoArgsConstructor @AllArgsConstructor @Builder
+@Entity @NoArgsConstructor @AllArgsConstructor @Builder @Getter @Setter
 @Table(name = "levels", schema = "application")
-@Getter @Setter
 public class Level {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
