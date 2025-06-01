@@ -9,6 +9,7 @@ import java.util.Date;
 
 
 @Entity @Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "users", schema = "application")
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
