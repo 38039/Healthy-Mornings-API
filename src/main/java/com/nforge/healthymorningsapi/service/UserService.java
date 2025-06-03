@@ -2,6 +2,7 @@
 // podanych przez klienta, a tych znajdujących się w bazie danych
 package com.nforge.healthymorningsapi.service;
 
+import com.nforge.healthymorningsapi.model.Level;
 import com.nforge.healthymorningsapi.payload.RegisterRequest;
 import org.springframework.stereotype.Service;
 
@@ -42,12 +43,20 @@ public class UserService {
     }
 
     public boolean registerUser(RegisterRequest request) {
-        return userRepository.registerUserCredencials(
-                request.getUsername(),
-                request.getEmail(),
-                request.getPassword(),
-                request.getDateOfBirth()
-        );
+        User user = new User();
+        user.setUsername( request.getUsername() );
+        user.setEmail( request.getEmail() );
+        user.setPassword( request.getPassword() );
+        user.setDateOfBirth( request.getDateOfBirth() );
+        user.setIsAdmin(false);
+
+        // TODO: Napisać levelRepository i zastąpić własnoręcznie tworzony obiekt, tym z repozytorium
+        Level level = new Level();
+        level.setId( 1 );
+        user.setLevel(level);
+
+        // Niby zawsze dodatkowe zabezpieczenie
+        return userRepository.save(user) != null;
     }
 
     // Zwraca czy użytkownik istnieje na podstawie interesującego nas atrybutu i jego nazwy

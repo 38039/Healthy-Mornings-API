@@ -26,5 +26,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     // Tymczasowe, gdyż nie ma implementacji BCrypta
     Optional<User> findByEmailAndPassword(String email, String password);
-
 }
