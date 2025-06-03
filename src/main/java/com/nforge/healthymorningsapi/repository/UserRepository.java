@@ -1,13 +1,16 @@
 package com.nforge.healthymorningsapi.repository;
 
 import com.nforge.healthymorningsapi.model.User;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmailAndPassword(String email, String password);
     Optional<User> findByEmail(String email);
-    Optional<User> findById_user(int id);
+    Optional<User> findByIdUser(@NotNull Long idUser);
 
 }
