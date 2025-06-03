@@ -2,6 +2,7 @@
 // podanych przez klienta, a tych znajdujących się w bazie danych
 package com.nforge.healthymorningsapi.service;
 
+import com.nforge.healthymorningsapi.payload.RegisterRequest;
 import org.springframework.stereotype.Service;
 
 import com.nforge.healthymorningsapi.model.User;
@@ -38,6 +39,15 @@ public class UserService {
 //        return encoder.matches(password, hash); // Zwraca true jeżeli hasła są takie same
 
         return userRepository.findByEmailAndPassword(email, password).isPresent();
+    }
+
+    public boolean registerUser(RegisterRequest request) {
+        return userRepository.registerUserCredencials(
+                request.getUsername(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getDateOfBirth()
+        );
     }
 
     // Zwraca czy użytkownik istnieje na podstawie interesującego nas atrybutu i jego nazwy
