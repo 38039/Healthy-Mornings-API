@@ -42,14 +42,18 @@ public class UserService {
         return userRepository.findByEmailAndPassword(email, password).isPresent();
     }
 
-    public boolean registerUser(RegisterRequest request) {
+    public boolean registerUser(
+            String username,
+            String email,
+            String password,
+            Date dateOfBirth
+    ) {
         User user = new User();
-        user.setUsername( request.getUsername() );
-        user.setEmail( request.getEmail() );
-        user.setPassword( request.getPassword() );
-        user.setDateOfBirth( request.getDateOfBirth() );
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setDateOfBirth(dateOfBirth);
         user.setIsAdmin(false);
-
         // TODO: Napisać levelRepository i zastąpić własnoręcznie tworzony obiekt, tym z repozytorium
         Level level = new Level();
         level.setId( 1 );
