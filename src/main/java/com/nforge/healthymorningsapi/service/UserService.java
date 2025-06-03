@@ -38,9 +38,9 @@ public class UserService {
         return userRepository.findByEmailAndPassword(email, password).isPresent();
     }
 
+//    public User findByEmail(String email) {
+//        return userRepository.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje w bazie danych"));
+//    }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje w bazie danych"));
-    }
 }
