@@ -27,7 +27,7 @@ public class User {
 
     @Getter @Column(name = "date_of_birth")
     @NotNull
-    private Date date_of_birth;
+    private Date dateOfBirth;
 
     @Getter @Column(name = "gender")
     @Pattern(regexp = "male|female|other")

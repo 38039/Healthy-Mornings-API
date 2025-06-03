@@ -5,12 +5,21 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByEmailAndPassword(String email, String password);
-    Optional<User> findByEmail(String email);
     Optional<User> findByIdUser(@NotNull Long idUser);
+    Optional<User> findByName(@NotNull String name);
+    Optional<User> findBySurname(@NotNull String surname);
+    Optional<User> findByDateOfBirth(@NotNull Date dateOfBirth);
+    Optional<User> findByGender(@NotNull String gender);
+    Optional<User> findByHeight(@NotNull Float height);
+    Optional<User> findByWeight(@NotNull Float weight);
+    Optional<User> findByUsername(@NotNull String username);
+    Optional<User> findByEmail(String email);
+//    Optional<User> findByPassword(@NotNull String password); Hashowanie haseł?
+    Optional<User> findByEmailAndPassword(String email, String password);
 
 }
