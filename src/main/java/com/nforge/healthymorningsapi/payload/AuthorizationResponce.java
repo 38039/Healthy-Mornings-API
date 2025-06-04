@@ -1,10 +1,17 @@
 package com.nforge.healthymorningsapi.payload;
 
-import lombok.Getter;
-
 
 public class AuthorizationResponce {
-    @Getter
     private String token;
     private long expiresIn;
+
+    public AuthorizationResponce setToken(String token) {
+        this.token = token;
+        return this;
+    }
+
+    public AuthorizationResponce setExpiresIn(long expiresIn) {
+        this.expiresIn = expiresIn;
+        return this;
+    }
 }
