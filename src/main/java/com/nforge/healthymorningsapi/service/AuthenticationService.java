@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @Service
 public class AuthenticationService {
     private final UserRepository        userRepository;
-//    private final PasswordEncoder       passwordEncoder; TODO: BCRYPT
+    private final PasswordEncoder       passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationService(
@@ -24,7 +24,7 @@ public class AuthenticationService {
             PasswordEncoder passwordEncoder
     ) {
         this.userRepository         = userRepository;
-//        this.passwordEncoder        = passwordEncoder; BCRYPT
+        this.passwordEncoder        = passwordEncoder;
         this.authenticationManager  = authenticationManager;
         System.out.println("[!] HM-API: (AuthenticationService) Inicjalizacja serwisu obsługi uwierzytelniania użytkownika");
     }
@@ -42,7 +42,7 @@ public class AuthenticationService {
         User user = new User();
         user.setNickname(request.getNickname());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setDateOfBirth(request.getDateOfBirth());
         user.setCreatedAt(ZonedDateTime.now());
         user.setIsAdmin(false);
