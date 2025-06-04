@@ -16,7 +16,7 @@ import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.service.UserService;
 
 
-@RequestMapping("/users")
+@RequestMapping("/user")
 @RestController
 public class UserController {
     private final UserService userService;
@@ -27,7 +27,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/me")
+    @GetMapping("/profile")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.ok(currentUser);
     }
 
-    @GetMapping("/")
+    @GetMapping("/all-users")
     public ResponseEntity<List<User>> allUsers() {
         List <User> users = userService.allUsers();
 
