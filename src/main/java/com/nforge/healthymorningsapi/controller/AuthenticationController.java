@@ -25,7 +25,7 @@ public class AuthenticationController {
         System.out.println("[!] HM-API: (AuthenticationController) Inicjalizacja kontrolera autoryzacji");
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegistrationRequest request) {
         User registeredUser = authenticationService.signup(request);
 
