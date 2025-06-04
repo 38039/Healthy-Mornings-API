@@ -53,7 +53,7 @@ public class UserService {
             return false;
 
         User user = new User();
-        user.setUsername(username);
+        user.setNickname(username);
         user.setEmail(email);
         user.setPassword(password);
         user.setDateOfBirth(dateOfBirth);
