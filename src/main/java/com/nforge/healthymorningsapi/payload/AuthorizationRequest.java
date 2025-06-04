@@ -10,7 +10,7 @@ import lombok.Setter;
 
 
 @Getter @Setter
-public class LoginRequest {
+public class AuthorizationRequest {
 
     @NotBlank @Email(message = "Podany email powinien trzymać się struktury email@domain.country")
     private String email;

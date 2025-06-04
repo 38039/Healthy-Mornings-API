@@ -2,7 +2,7 @@
 // za pomocą których klient będzie komunikował żądania do API
 package com.nforge.healthymorningsapi.controller;
 
-import com.nforge.healthymorningsapi.payload.RegisterRequest;
+import com.nforge.healthymorningsapi.payload.RegistrationRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nforge.healthymorningsapi.model.User;
-import com.nforge.healthymorningsapi.payload.LoginRequest;
+import com.nforge.healthymorningsapi.payload.AuthorizationRequest;
 import com.nforge.healthymorningsapi.service.UserService;
 
 
@@ -27,18 +27,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody AuthorizationRequest authorizationRequest) {
 
         // Najpierw weryfikowanym jest czy dane przesyłane przez klienta zgadzają się z danymi przechowywanymi w bazie danych
         boolean authenticationStatus = userService.authenticateUser(
-                loginRequest.getEmail(),
-                loginRequest.getPassword()
+                authorizationRequest.getEmail(),
+                authorizationRequest.getPassword()
         );
 
 
         // Następnie zwracana jest odpowiedź w zależności od statusu
         if (authenticationStatus) {
-            User user = userService.findByEmail(loginRequest.getEmail());
+            User user = userService.findByEmail(authorizationRequest.getEmail());
             return ResponseEntity.ok(user.getIdUser());
         }
 
@@ -46,12 +46,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody RegistrationRequest registrationRequest) {
         boolean registerStatus = userService.registerUser(
-                registerRequest.getNickname(),
-                registerRequest.getEmail(),
-                registerRequest.getPassword(),   // TODO: [!] hasło ma być hashowane przez BCrypt
-                registerRequest.getDateOfBirth()
+                registrationRequest.getNickname(),
+                registrationRequest.getEmail(),
+                registrationRequest.getPassword(),   // TODO: [!] hasło ma być hashowane przez BCrypt
+                registrationRequest.getDateOfBirth()
         );
 
         if (registerStatus) {

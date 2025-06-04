@@ -14,7 +14,7 @@ import java.util.Date;
 
 
 @Getter @Setter
-public class RegisterRequest {
+public class RegistrationRequest {
 
     @NotBlank
     private String nickname;
