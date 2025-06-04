@@ -1,13 +1,16 @@
 package com.nforge.healthymorningsapi.service;
 
+import com.nforge.healthymorningsapi.entity.Level;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import com.nforge.healthymorningsapi.model.User;
+import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.repository.UserRepository;
 import com.nforge.healthymorningsapi.payload.AuthorizationRequest;
 import com.nforge.healthymorningsapi.payload.RegistrationRequest;
+
+import java.time.ZonedDateTime;
 
 @Service
 public class AuthenticationService {
@@ -33,11 +36,17 @@ public class AuthenticationService {
 //                .setPassword(passwordEncoder.encode(request.getPassword()))
 //                .setDateOfBirth(request.getDateOfBirth());
 
+        Level level = new Level();
+        level.setId(1);
+
         User user = new User();
         user.setNickname(request.getNickname());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
         user.setDateOfBirth(request.getDateOfBirth());
+        user.setCreatedAt(ZonedDateTime.now());
+        user.setIsAdmin(false);
+        user.setLevel(level);
 
         return userRepository.save(user);
     }
