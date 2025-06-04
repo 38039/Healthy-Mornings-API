@@ -2,6 +2,7 @@
 // który przechowuje podane przez klienta dane do rejestracji
 package com.nforge.healthymorningsapi.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,8 @@ public class RegisterRequest {
     @NotBlank @Size(min = 6, max = 100, message = "Hasło musi mieć minimum 6 znaków")
     private String password;
 
+    // JsonFormat rzutuje datę z stringa w JSONie na java.util.Date
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @NotNull
     private Date dateOfBirth;
 }
