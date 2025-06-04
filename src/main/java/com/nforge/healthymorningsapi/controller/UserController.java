@@ -23,7 +23,7 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
-        System.out.println("Inicjalizacja komponentu UserController");
+        System.out.println("[!] HM-API: (UserController) Inicjalizacja kontrolera użytkowników");
     }
 
     @PostMapping("/login")

@@ -20,7 +20,7 @@ public class UserService {
     // Inicjalizacja repozytorium od komunikacji z bazą
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        System.out.println("Inicjalizacja komponentu UserService");
+        System.out.println("[!] HM-API: (UserService) Inicjalizacja serwisu użytkowników");
     }
 
     // Klient przekazuje do API podane email i hasło od użytkownika, następnie metoda:
