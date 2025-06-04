@@ -2,6 +2,7 @@
 // za pomocą których klient będzie komunikował żądania do API
 package com.nforge.healthymorningsapi.controller;
 
+import com.nforge.healthymorningsapi.payload.RegisterRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,12 +35,27 @@ public class UserController {
                 loginRequest.getPassword()
         );
 
+
         // Następnie zwracana jest odpowiedź w zależności od statusu
         if (authenticationStatus) {
             User user = userService.findByEmail(loginRequest.getEmail());
-            return ResponseEntity.ok(user);
-            // TODO: API ma zwracać tylko ID użytkownika, nie wszystkie jego dane
-//            return ResponseEntity.ok(user.getIdUser());
-        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ERROR 401: Podano nieprawidłowy email lub hasło!");
+            return ResponseEntity.ok(user.getIdUser());
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ERROR 401: Podano nieprawidłowy email lub hasło!");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
+        boolean registerStatus = userService.registerUser(
+                registerRequest.getUsername(),
+                registerRequest.getEmail(),
+                registerRequest.getPassword(),   // TODO: [!] hasło ma być hashowane przez BCrypt
+                registerRequest.getDateOfBirth()
+        );
+
+        if (registerStatus) {
+            return    ResponseEntity.status(HttpStatus.CREATED).body("Rejestracja zakończona sukcesem.");
+        } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Użytkownik już istnieje.");
     }
 }

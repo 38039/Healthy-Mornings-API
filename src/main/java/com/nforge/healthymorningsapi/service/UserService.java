@@ -3,12 +3,12 @@
 package com.nforge.healthymorningsapi.service;
 
 import com.nforge.healthymorningsapi.model.Level;
-import com.nforge.healthymorningsapi.payload.RegisterRequest;
 import org.springframework.stereotype.Service;
 
 import com.nforge.healthymorningsapi.model.User;
 import com.nforge.healthymorningsapi.repository.UserRepository;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 
@@ -48,53 +48,71 @@ public class UserService {
             String password,
             Date dateOfBirth
     ) {
+
+        if (this.doesUserExist("username", username) || this.doesUserExist("email", email))
+            return false;
+
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
         user.setDateOfBirth(dateOfBirth);
+
+        // Hibernate tego wymaga
+        user.setCreatedAt(ZonedDateTime.now());
+
         user.setIsAdmin(false);
         // TODO: Napisać levelRepository i zastąpić własnoręcznie tworzony obiekt, tym z repozytorium
         Level level = new Level();
         level.setId( 1 );
         user.setLevel(level);
 
-        // Niby zawsze dodatkowe zabezpieczenie
-        return userRepository.save(user) != null;
+        userRepository.save(user);
+        return true;
     }
 
     // Zwraca czy użytkownik istnieje na podstawie interesującego nas atrybutu i jego nazwy
     public boolean doesUserExist(String type, Object input) {
-        return switch (type) {                              // Rzutowanie typów z object
-            // Nie zwraca danych personalnych, tylko status istnienia, zatem nie widzę powodu by komentować ten kod
-            case "ID"           -> this.findByID(           (Long  ) input) != null;
-            case "name"         -> this.findByName(         (String) input) != null;
-            case "surname"      -> this.findBySurname(      (String) input) != null;
-            case "dateOfBirth"  -> this.findByDateOfBirth(  (Date  ) input) != null;
-            case "gender"       -> this.findByGender(       (String) input) != null;
-            case "height"       -> this.findByHeight(       (Float)  input) != null;
-            case "weight"       -> this.findByWeight(       (Float)  input) != null;
-            case "username"     -> this.findByUsername(     (String) input) != null;
-            case "email"        -> this.findByEmail(        (String) input) != null;
-            default -> false;
-        };
+        try {
+            return switch (type) {                              // Rzutowanie typów z object
+                // Nie zwraca danych personalnych, tylko status istnienia, zatem nie widzę powodu, by komentować ten kod
+                case "ID"           -> this.findByID(           (Long  ) input) != null;
+                case "name"         -> this.findByName(         (String) input) != null;
+                case "surname"      -> this.findBySurname(      (String) input) != null;
+                case "dateOfBirth"  -> this.findByDateOfBirth(  (Date  ) input) != null;
+                case "gender"       -> this.findByGender(       (String) input) != null;
+                case "height"       -> this.findByHeight(       (Float)  input) != null;
+                case "weight"       -> this.findByWeight(       (Float)  input) != null;
+                case "username"     -> this.findByUsername(     (String) input) != null;
+                case "email"        -> this.findByEmail(        (String) input) != null;
+                default -> false;
+            };
+        } catch (Exception e) {
+            return false; // Proszę mnie nie zabijać
+        }
+
     }
 
-    // Skoro już mamy metodę która zwraca status istnienia użytkownika na podstawie jego danych, miejmy też taką samą która zwraca samego użytkownika
+    // Skoro już mamy metodę, która zwraca status istnienia użytkownika na podstawie jego danych, miejmy też taką samą, która zwraca samego użytkownika
     public User returnOnArgument(String type, Object input) {
-        return switch (type) {                              // Rzutowanie typów z object
-            case "ID"           -> this.findByID(           (Long  ) input);
-            // Lepiej używać tylko tych pól których wartości muszą być unikatowe, żeby nie zwrócić randomowych użytkowników
+        try {
+            return switch (type) {                              // Rzutowanie typów z object
+                case "ID"           -> this.findByID(           (Long  ) input);
+                // Lepiej używać tylko tych pól których wartości muszą być unikatowe, żeby nie zwrócić randomowych użytkowników
 //            case "name"         -> this.findByName(         (String) input);
 //            case "surname"      -> this.findBySurname(      (String) input);
 //            case "dateOfBirth"  -> this.findByDateOfBirth(  (Date  ) input);
 //            case "gender"       -> this.findByGender(       (String) input);
 //            case "height"       -> this.findByHeight(       (Float)  input);
 //            case "weight"       -> this.findByWeight(       (Float)  input);
-            case "username"     -> this.findByUsername(     (String) input);
-            case "email"        -> this.findByEmail(        (String) input);
-            default -> null;
-        };
+                case "username"     -> this.findByUsername(     (String) input);
+                case "email"        -> this.findByEmail(        (String) input);
+                default -> null;
+            };
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     public User findByID(Long ID) {
