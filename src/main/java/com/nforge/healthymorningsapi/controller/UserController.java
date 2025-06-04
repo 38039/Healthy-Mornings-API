@@ -48,7 +48,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
         boolean registerStatus = userService.registerUser(
-                registerRequest.getUsername(),
+                registerRequest.getNickname(),
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),   // TODO: [!] hasło ma być hashowane przez BCrypt
                 registerRequest.getDateOfBirth()

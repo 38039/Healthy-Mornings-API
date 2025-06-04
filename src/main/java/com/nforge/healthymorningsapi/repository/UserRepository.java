@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByHeight(@NotNull Float height);
     Optional<User> findByWeight(@NotNull Float weight);
 
-    Optional<User> findByUsername(@NotNull String username);
+    Optional<User> findByNickname(@NotNull String username); // Podmiana z username, żeby nie kolidować z Spring
     Optional<User> findByEmail(String email);
 //    Optional<User> findByPassword(@NotNull String password); Hashowanie haseł?
 

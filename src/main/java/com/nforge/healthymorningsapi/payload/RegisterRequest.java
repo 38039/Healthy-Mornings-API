@@ -17,7 +17,7 @@ import java.util.Date;
 public class RegisterRequest {
 
     @NotBlank
-    private String username;
+    private String nickname;
 
     @NotBlank @Email(message = "Podany email powinien trzymać się struktury email@domain.country")
     private String email;
