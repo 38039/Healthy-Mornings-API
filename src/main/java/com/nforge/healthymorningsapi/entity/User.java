@@ -75,7 +75,7 @@ public class User implements UserDetails {
     private Boolean isAdmin;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "level", referencedColumnName = "id_level", foreignKey = @ForeignKey(name = "users_level_fkey"))
     private Level level;
 

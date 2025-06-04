@@ -9,7 +9,9 @@ import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.repository.UserRepository;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -69,6 +71,13 @@ public class UserService {
 
         userRepository.save(user);
         return true;
+    }
+
+    public List<User> allUsers() {
+        List<User> users = new ArrayList<>();
+        userRepository.findAll().forEach(users::add);
+
+        return users;
     }
 
     // Zwraca czy użytkownik istnieje na podstawie interesującego nas atrybutu i jego nazwy
