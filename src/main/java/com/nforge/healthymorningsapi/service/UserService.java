@@ -2,10 +2,10 @@
 // podanych przez klienta, a tych znajdujących się w bazie danych
 package com.nforge.healthymorningsapi.service;
 
-import com.nforge.healthymorningsapi.model.Level;
+import com.nforge.healthymorningsapi.entity.Level;
 import org.springframework.stereotype.Service;
 
-import com.nforge.healthymorningsapi.model.User;
+import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.repository.UserRepository;
 
 import java.time.ZonedDateTime;

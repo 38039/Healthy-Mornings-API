@@ -1,6 +1,6 @@
 package com.nforge.healthymorningsapi.repository;
 
-import com.nforge.healthymorningsapi.model.User;
+import com.nforge.healthymorningsapi.entity.User;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

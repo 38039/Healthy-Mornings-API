@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nforge.healthymorningsapi.model.User;
+import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.payload.AuthorizationRequest;
 import com.nforge.healthymorningsapi.service.UserService;
 
