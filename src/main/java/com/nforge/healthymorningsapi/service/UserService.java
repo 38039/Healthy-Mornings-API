@@ -2,14 +2,16 @@
 // podanych przez klienta, a tych znajdujących się w bazie danych
 package com.nforge.healthymorningsapi.service;
 
-import com.nforge.healthymorningsapi.model.Level;
+import com.nforge.healthymorningsapi.entity.Level;
 import org.springframework.stereotype.Service;
 
-import com.nforge.healthymorningsapi.model.User;
+import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.repository.UserRepository;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -20,7 +22,7 @@ public class UserService {
     // Inicjalizacja repozytorium od komunikacji z bazą
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        System.out.println("Inicjalizacja komponentu UserService");
+        System.out.println("[!] HM-API: (UserService) Inicjalizacja serwisu użytkowników");
     }
 
     // Klient przekazuje do API podane email i hasło od użytkownika, następnie metoda:
@@ -43,17 +45,17 @@ public class UserService {
     }
 
     public boolean registerUser(
-            String username,
+            String nickname,
             String email,
             String password,
             Date dateOfBirth
     ) {
 
-        if (this.doesUserExist("username", username) || this.doesUserExist("email", email))
+        if (this.doesUserExist("nickname", nickname) || this.doesUserExist("email", email))
             return false;
 
         User user = new User();
-        user.setUsername(username);
+        user.setNickname(nickname);
         user.setEmail(email);
         user.setPassword(password);
         user.setDateOfBirth(dateOfBirth);
@@ -71,6 +73,13 @@ public class UserService {
         return true;
     }
 
+    public List<User> allUsers() {
+        List<User> users = new ArrayList<>();
+        userRepository.findAll().forEach(users::add);
+
+        return users;
+    }
+
     // Zwraca czy użytkownik istnieje na podstawie interesującego nas atrybutu i jego nazwy
     public boolean doesUserExist(String type, Object input) {
         try {
@@ -83,7 +92,7 @@ public class UserService {
                 case "gender"       -> this.findByGender(       (String) input) != null;
                 case "height"       -> this.findByHeight(       (Float)  input) != null;
                 case "weight"       -> this.findByWeight(       (Float)  input) != null;
-                case "username"     -> this.findByUsername(     (String) input) != null;
+                case "nickname"     -> this.findByNickname(     (String) input) != null;
                 case "email"        -> this.findByEmail(        (String) input) != null;
                 default -> false;
             };
@@ -105,7 +114,7 @@ public class UserService {
 //            case "gender"       -> this.findByGender(       (String) input);
 //            case "height"       -> this.findByHeight(       (Float)  input);
 //            case "weight"       -> this.findByWeight(       (Float)  input);
-                case "username"     -> this.findByUsername(     (String) input);
+                case "nickname"     -> this.findByNickname(     (String) input);
                 case "email"        -> this.findByEmail(        (String) input);
                 default -> null;
             };
@@ -120,8 +129,8 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje w bazie danych"));
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public User findByNickname(String nickname) {
+        return userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje w bazie danych"));
     }
 

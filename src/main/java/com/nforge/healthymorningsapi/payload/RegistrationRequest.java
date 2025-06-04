@@ -14,10 +14,10 @@ import java.util.Date;
 
 
 @Getter @Setter
-public class RegisterRequest {
+public class RegistrationRequest {
 
     @NotBlank
-    private String username;
+    private String nickname;
 
     @NotBlank @Email(message = "Podany email powinien trzymać się struktury email@domain.country")
     private String email;

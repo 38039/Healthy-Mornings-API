@@ -1,16 +1,20 @@
-package com.nforge.healthymorningsapi.model;
+package com.nforge.healthymorningsapi.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity @Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Table(name = "users", schema = "application")
-public class User {
+public class User implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter @Column(name = "id_user")
@@ -41,7 +45,7 @@ public class User {
     @Getter @Column(name = "username", unique = true)
     @Size(max = 30)
     @NotBlank // NotBlank upewnia się nie tylko że zmienna nie wynosi null, ale także że nie pojawiają się w niej białe znaki pokroju spacji
-    private String username;
+    private String nickname;
 
     @Getter @Column(name = "email", unique = true)
     @Size(max = 254)
@@ -71,8 +75,15 @@ public class User {
     private Boolean isAdmin;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "level", referencedColumnName = "id_level", foreignKey = @ForeignKey(name = "users_level_fkey"))
     private Level level;
 
+
+    @Override public Collection<? extends GrantedAuthority> getAuthorities() { return List.of(); }
+    @Override public String  getUsername()             { return email; }
+    @Override public boolean isAccountNonExpired()     { return true;  }
+    @Override public boolean isAccountNonLocked()      { return true;  }
+    @Override public boolean isCredentialsNonExpired() { return true;  }
+    @Override public boolean isEnabled()               { return true;  }
 }

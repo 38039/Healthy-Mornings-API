@@ -1,20 +1,24 @@
-package com.nforge.healthymorningsapi.model;
+package com.nforge.healthymorningsapi.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity @NoArgsConstructor @AllArgsConstructor @Builder @Getter @Setter
-@Table(name = "rewards", schema = "application")
-public class Reward {
+@Table(name = "tasks", schema = "application")
+public class Task {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_reward")
-    @NotNull
+    @Getter @Column(name = "id_task")
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "category")
+    @NotBlank
+    private String category;
+
+    @Column(name = "name", unique = true)
     @NotBlank
     private String name;
 
@@ -22,8 +26,7 @@ public class Reward {
     @NotBlank
     private String description;
 
-    @Column(name = "required_level")
-    @NotNull
-    private Long requiredLevel;
-
+    @Column(name = "points_reward")
+    @NotNull @Min(0)
+    private Integer pointsReward;
 }

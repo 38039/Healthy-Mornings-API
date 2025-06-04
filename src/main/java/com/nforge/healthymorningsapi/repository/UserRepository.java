@@ -1,6 +1,6 @@
 package com.nforge.healthymorningsapi.repository;
 
-import com.nforge.healthymorningsapi.model.User;
+import com.nforge.healthymorningsapi.entity.User;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByHeight(@NotNull Float height);
     Optional<User> findByWeight(@NotNull Float weight);
 
-    Optional<User> findByUsername(@NotNull String username);
+    Optional<User> findByNickname(@NotNull String username); // Podmiana z username, żeby nie kolidować z Spring
     Optional<User> findByEmail(String email);
 //    Optional<User> findByPassword(@NotNull String password); Hashowanie haseł?
 

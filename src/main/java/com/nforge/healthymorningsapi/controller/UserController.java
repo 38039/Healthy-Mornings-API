@@ -2,60 +2,44 @@
 // za pomocą których klient będzie komunikował żądania do API
 package com.nforge.healthymorningsapi.controller;
 
-import com.nforge.healthymorningsapi.payload.RegisterRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-import com.nforge.healthymorningsapi.model.User;
-import com.nforge.healthymorningsapi.payload.LoginRequest;
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.service.UserService;
 
 
+@RequestMapping("/users")
 @RestController
-@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
-
     public UserController(UserService userService) {
         this.userService = userService;
-        System.out.println("Inicjalizacja komponentu UserController");
+        System.out.println("[!] HM-API: (UserController) Inicjalizacja kontrolera użytkowników");
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
 
-        // Najpierw weryfikowanym jest czy dane przesyłane przez klienta zgadzają się z danymi przechowywanymi w bazie danych
-        boolean authenticationStatus = userService.authenticateUser(
-                loginRequest.getEmail(),
-                loginRequest.getPassword()
-        );
+    @GetMapping("/me")
+    public ResponseEntity<User> authenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        User currentUser = (User) authentication.getPrincipal();
 
-        // Następnie zwracana jest odpowiedź w zależności od statusu
-        if (authenticationStatus) {
-            User user = userService.findByEmail(loginRequest.getEmail());
-            return ResponseEntity.ok(user.getIdUser());
-        }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ERROR 401: Podano nieprawidłowy email lub hasło!");
+        return ResponseEntity.ok(currentUser);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-        boolean registerStatus = userService.registerUser(
-                registerRequest.getUsername(),
-                registerRequest.getEmail(),
-                registerRequest.getPassword(),   // TODO: [!] hasło ma być hashowane przez BCrypt
-                registerRequest.getDateOfBirth()
-        );
+    @GetMapping("/")
+    public ResponseEntity<List<User>> allUsers() {
+        List <User> users = userService.allUsers();
 
-        if (registerStatus) {
-            return    ResponseEntity.status(HttpStatus.CREATED).body("Rejestracja zakończona sukcesem.");
-        } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Użytkownik już istnieje.");
+        return ResponseEntity.ok(users);
     }
 }

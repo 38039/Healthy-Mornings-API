@@ -1,4 +1,4 @@
-package com.nforge.healthymorningsapi.model;
+package com.nforge.healthymorningsapi.entity;
 
 import lombok.*;
 import jakarta.persistence.*;
