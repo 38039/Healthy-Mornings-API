@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class JwtService {
 
     public JwtService() {
-        System.out.println("[!] HM-API: (JwtService) Inicjalizacja serwisu obsługi tokenów");
+        System.out.println("[!] HM-API: (JwtService) Inicjalizacja serwisu obsługi tokenów uwierzytelniających");
     }
 
     @Value("${jwt.secret}")
