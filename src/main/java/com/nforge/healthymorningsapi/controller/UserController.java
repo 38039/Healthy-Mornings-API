@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit/profile")
     public ResponseEntity<User> editUser(@RequestBody EditProfileRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
