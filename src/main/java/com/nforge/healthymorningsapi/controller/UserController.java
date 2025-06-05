@@ -4,11 +4,8 @@ package com.nforge.healthymorningsapi.controller;
 
 import java.util.List;
 
-import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.nforge.healthymorningsapi.payload.EditProfileRequest;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +27,6 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         User currentUser = (User) authentication.getPrincipal();
 
         return ResponseEntity.ok(currentUser);
@@ -41,5 +37,14 @@ public class UserController {
         List <User> users = userService.allUsers();
 
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<User> editUser(@RequestBody EditProfileRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        currentUser = userService.updateUser(currentUser, request);
+
+        return ResponseEntity.ok(currentUser);
     }
 }
