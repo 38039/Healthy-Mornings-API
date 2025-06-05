@@ -57,4 +57,13 @@ public class UserController {
 
         return ResponseEntity.ok(currentUser);
     }
+
+    @DeleteMapping("/delete/profile")
+    public ResponseEntity<?> deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        userService.deleteUser(currentUser);
+        return ResponseEntity.ok("Konto zostało pomyślnie usunięte!");
+    }
 }

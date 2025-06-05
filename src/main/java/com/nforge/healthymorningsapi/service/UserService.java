@@ -75,6 +75,15 @@ public class UserService {
         return savedUser.orElse(null);
     }
 
+    public void deleteUser(User user) {
+//        Gdybyśmy chcieli by użytkownik podał hasło przed usunięciem konta
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            throw new BadCredentialsException("Niepoprawne hasło");
+//        }
+
+        userRepository.delete(user);
+    }
+
     // Zwraca czy użytkownik istnieje na podstawie interesującego nas atrybutu i jego nazwy
     public boolean doesUserExist(String type, Object input) {
         try {
