@@ -25,7 +25,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/profile")
+    @GetMapping("/get/profile")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
@@ -33,7 +33,7 @@ public class UserController {
         return ResponseEntity.ok(currentUser);
     }
 
-    @GetMapping("/all-users")
+    @GetMapping("/get/profile-all")
     public ResponseEntity<List<User>> allUsers() {
         List <User> users = userService.allUsers();
 
