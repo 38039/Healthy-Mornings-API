@@ -2,7 +2,6 @@ package com.nforge.healthymorningsapi.service;
 
 import com.nforge.healthymorningsapi.entity.Level;
 import com.nforge.healthymorningsapi.exception.ExistingUserException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +32,7 @@ public class AuthenticationService {
         this.userService = userService;
     }
 
+    // Czy nie lepiej przenieść to do UserService?
     public User signup(RegistrationRequest request) throws ExistingUserException {
 
         // Ble, można spróbować to podmienić na .orElseThrow()
@@ -55,15 +55,15 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    public User authenticate(AuthorizationRequest input) {
+    public User authenticate(AuthorizationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
-                        input.getPassword()
+                        request.getEmail(),
+                        request.getPassword()
                 )
         );
 
-        return userRepository.findByEmail(input.getEmail())
+        return userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
     }
 }
