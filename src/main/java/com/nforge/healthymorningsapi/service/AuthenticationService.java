@@ -1,6 +1,7 @@
 package com.nforge.healthymorningsapi.service;
 
 import com.nforge.healthymorningsapi.entity.Level;
+import com.nforge.healthymorningsapi.exception.ExistingUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,24 +18,27 @@ public class AuthenticationService {
     private final UserRepository        userRepository;
     private final PasswordEncoder       passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder
-    ) {
+            PasswordEncoder passwordEncoder,
+            UserService userService) {
         this.userRepository         = userRepository;
         this.passwordEncoder        = passwordEncoder;
         this.authenticationManager  = authenticationManager;
         System.out.println("[!] HM-API: (AuthenticationService) Inicjalizacja serwisu obsługi uwierzytelniania użytkownika");
+        this.userService = userService;
     }
 
-    public User signup(RegistrationRequest request) {
-//        User user = new User()
-//                .setNickname(request.getNickname())
-//                .setEmail(request.getEmail())
-//                .setPassword(passwordEncoder.encode(request.getPassword()))
-//                .setDateOfBirth(request.getDateOfBirth());
+    // Czy nie lepiej przenieść to do UserService?
+    public User signup(RegistrationRequest request) throws ExistingUserException {
+
+        // Ble, można spróbować to podmienić na .orElseThrow()
+        if (    userService.doesUserExist("nickname", request.getNickname() )   ||
+                userService.doesUserExist("email",    request.getEmail()    )     )
+            throw new ExistingUserException("Użytkownik o podanych danych już istnieje");
 
         Level level = new Level();
         level.setId(1);
@@ -51,15 +55,15 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    public User authenticate(AuthorizationRequest input) {
+    public User authenticate(AuthorizationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
-                        input.getPassword()
+                        request.getEmail(),
+                        request.getPassword()
                 )
         );
 
-        return userRepository.findByEmail(input.getEmail())
+        return userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
     }
 }

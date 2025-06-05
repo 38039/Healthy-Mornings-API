@@ -2,82 +2,86 @@
 // podanych przez klienta, a tych znajdujących się w bazie danych
 package com.nforge.healthymorningsapi.service;
 
-import com.nforge.healthymorningsapi.entity.Level;
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.Optional;
 
+import com.nforge.healthymorningsapi.payload.EditPasswordRequest;
+import com.nforge.healthymorningsapi.payload.EditProfileRequest;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.repository.UserRepository;
-
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-
-    // Inicjalizacja repozytorium od komunikacji z bazą
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         System.out.println("[!] HM-API: (UserService) Inicjalizacja serwisu użytkowników");
     }
 
-    // Klient przekazuje do API podane email i hasło od użytkownika, następnie metoda:
-    public boolean authenticateUser(String email, String password) {
-
-        // TODO: [!] BCRYPT NIE JEST JESZCZE ZAIMPLEMENTOWANY
-        //       [!] ODKOMENTOWAĆ TO PO IMPLEMENTACJI / PODMIENIĆ TEN HACK
-//        // Wyszukuje użytkownika po emailu w bazie danych poprzez repozytorium
-//        Optional<User> downloadedUserData = userRepository.findByEmail(email);
-//        if (downloadedUserData.isEmpty()) return false; // Użytkownik musi istnieć w bazie
-//
-//        User user = downloadedUserData.get();   // Następnie następuje konwersja na lokalny rekord/model (ORM)
-//        String hash = user.getPassword();       // Z którego za pomocą gettera wygenerowanego przez lombok wyciągany jest hash
-//
-//        // Ponieważ BCrypt generuje unikalny hash hash za każdym razem, wymagane jest użycie metod tej biblioteki do weryfikacji hasła
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        return encoder.matches(password, hash); // Zwraca true jeżeli hasła są takie same
-
-        return userRepository.findByEmailAndPassword(email, password).isPresent();
-    }
-
-    public boolean registerUser(
-            String nickname,
-            String email,
-            String password,
-            Date dateOfBirth
-    ) {
-
-        if (this.doesUserExist("nickname", nickname) || this.doesUserExist("email", email))
-            return false;
-
-        User user = new User();
-        user.setNickname(nickname);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setDateOfBirth(dateOfBirth);
-
-        // Hibernate tego wymaga
-        user.setCreatedAt(ZonedDateTime.now());
-
-        user.setIsAdmin(false);
-        // TODO: Napisać levelRepository i zastąpić własnoręcznie tworzony obiekt, tym z repozytorium
-        Level level = new Level();
-        level.setId( 1 );
-        user.setLevel(level);
-
-        userRepository.save(user);
-        return true;
-    }
 
     public List<User> allUsers() {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);
 
         return users;
+    }
+
+    public User updateUser(User user, EditProfileRequest request) {
+        // Ból
+        if (request.getName()     != null) user.setName(     request.getName()     );
+        if (request.getSurname()  != null) user.setSurname(  request.getSurname()  );
+        if (request.getGender()   != null) user.setGender(   request.getGender()   );
+        if (request.getNickname() != null) user.setNickname( request.getNickname() );
+        if (request.getEmail()    != null) user.setEmail(    request.getEmail()    );
+        if (request.getBio()      != null) user.setBio(      request.getBio()      );
+        if (request.getHeight()   != null) user.setHeight(   request.getHeight()   );
+        if (request.getWeight()   != null) user.setWeight(   request.getWeight()   );
+
+        userRepository.save(user);
+        return user;
+    }
+
+    public User updatePassword(User user, EditPasswordRequest request) {
+        // Aktualnie użytkownik nie podaje starego hasła przy prośbie zmiany na nowe,
+        // ale potem można to zaimplementować, i wtedy to odkomentować
+//        if (!passwordEncoder.matches(
+//                request.getCurrentPassword(),
+//                user.getPassword()
+//            )
+//        ) throw new BadCredentialsException("Użytkownik podał błędne stare hasło");
+
+        // Chcemy by nadpisywane w bazie hasło było różne niż te podane przez użytkownika (by nie nadpisywać niepotrzebne danych)
+        // lepiej by API to obsługiwało gdyż żądanie może niekoniecznie pochodzić od klienta
+        if (passwordEncoder.matches(
+                request.getNewPassword(),
+                user.getPassword()
+        ) ) throw new BadCredentialsException("Użytkownik próbuje nadpisywać te samo hasło");
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        // Chcemy by po zapisie dane użytkownika były na nowo pobierane, gdyż REST zwraca użytkownika
+        Optional<User> savedUser = userRepository.findByIdUser(user.getIdUser());
+
+        return savedUser.orElse(null);
+    }
+
+    public void deleteUser(User user) {
+//        Gdybyśmy chcieli by użytkownik podał hasło przed usunięciem konta
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            throw new BadCredentialsException("Niepoprawne hasło");
+//        }
+
+        userRepository.delete(user);
     }
 
     // Zwraca czy użytkownik istnieje na podstawie interesującego nas atrybutu i jego nazwy
@@ -171,5 +175,4 @@ public class UserService {
         return userRepository.findByWeight(weight)
                 .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje w bazie danych"));
     }
-
 }
