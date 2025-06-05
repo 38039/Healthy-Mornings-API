@@ -3,13 +3,13 @@ package com.nforge.healthymorningsapi.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Entity @Data @NoArgsConstructor @AllArgsConstructor @Builder
@@ -78,6 +78,13 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "level", referencedColumnName = "id_level", foreignKey = @ForeignKey(name = "users_level_fkey"))
     private Level level;
+
+    @ManyToMany @Fetch(FetchMode.JOIN)
+    @JoinTable(name = "user_tasks",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_task")
+    )
+    private Set<Task> assignedTasks = new HashSet<>();
 
 
     @Override public Collection<? extends GrantedAuthority> getAuthorities() { return List.of(); }
