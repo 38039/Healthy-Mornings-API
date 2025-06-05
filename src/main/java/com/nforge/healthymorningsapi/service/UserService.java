@@ -71,7 +71,8 @@ public class UserService {
 
         // Chcemy by po zapisie dane użytkownika były na nowo pobierane, gdyż REST zwraca użytkownika
         Optional<User> savedUser = userRepository.findByIdUser(user.getIdUser());
-        return (User) savedUser.get();
+
+        return savedUser.orElse(null);
     }
 
     // Zwraca czy użytkownik istnieje na podstawie interesującego nas atrybutu i jego nazwy
