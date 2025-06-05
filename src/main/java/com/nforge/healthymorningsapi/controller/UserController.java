@@ -4,6 +4,7 @@ package com.nforge.healthymorningsapi.controller;
 
 import java.util.List;
 
+import com.nforge.healthymorningsapi.payload.EditPasswordRequest;
 import com.nforge.healthymorningsapi.payload.EditProfileRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,15 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         currentUser = userService.updateUser(currentUser, request);
+
+        return ResponseEntity.ok(currentUser);
+    }
+
+    @PutMapping("/edit/password")
+    public ResponseEntity<User> editPassword(@RequestBody EditPasswordRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        currentUser = userService.updatePassword(currentUser, request);
 
         return ResponseEntity.ok(currentUser);
     }
