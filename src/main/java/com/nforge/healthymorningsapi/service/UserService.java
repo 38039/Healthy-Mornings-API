@@ -1,19 +1,17 @@
-// UserService odpowiada za logikę autoryzacji danych użytkownika
-// podanych przez klienta, a tych znajdujących się w bazie danych
+// Obsługuje logikę użytkowników
 package com.nforge.healthymorningsapi.service;
 
 import java.util.List;
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.Optional;
-
-import com.nforge.healthymorningsapi.payload.EditPasswordRequest;
-import com.nforge.healthymorningsapi.payload.EditProfileRequest;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.ArrayList;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.BadCredentialsException;
 import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.repository.UserRepository;
+import com.nforge.healthymorningsapi.payload.EditProfileRequest;
+import com.nforge.healthymorningsapi.payload.EditPasswordRequest;
 
 
 @Service
