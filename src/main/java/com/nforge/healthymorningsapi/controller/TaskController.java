@@ -28,7 +28,7 @@ public class TaskController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
 
-        List<Task> tasks = taskService.getAllTasks(currentUser);
+        List<Task> tasks = taskService.getAllUserTasks(currentUser);
         return ResponseEntity.ok(tasks);
     }
 
@@ -38,6 +38,13 @@ public class TaskController {
         User currentUser = (User) authentication.getPrincipal();
 
         List<Task> tasks = taskService.addTask(currentUser, addTaskRequest);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        List<Task> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
 }
