@@ -1,5 +1,6 @@
 package com.nforge.healthymorningsapi.entity;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -28,18 +29,9 @@ public class UserTask {
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
-    @Enumerated(EnumType.STRING)
+    @Pattern(regexp = "pending|in_progress|completed|skipped")
     @Column(name = "status")
     @NotNull
-    private TaskStatus status;
-
-}
-
-// Enum for task_status
-enum TaskStatus {
-    PENDING,
-    IN_PROGRESS,
-    COMPLETED,
-    SKIPPED
+    private String status;
 }
 
