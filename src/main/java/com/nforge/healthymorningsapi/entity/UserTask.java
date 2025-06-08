@@ -1,5 +1,6 @@
 package com.nforge.healthymorningsapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import jakarta.persistence.*;
@@ -14,10 +15,12 @@ public class UserTask {
     @Column(name = "id_assignment")
     private Long idAssignment;
 
+    @JsonIgnore
     @JoinColumn(name = "id_user")
     @NotNull @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @JsonIgnore
     @JoinColumn(name = "id_task")
     @NotNull @ManyToOne(fetch = FetchType.LAZY)
     private Task task;
