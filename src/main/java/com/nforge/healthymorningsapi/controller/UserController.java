@@ -1,17 +1,15 @@
-// Służy do zdefiniowania endpointów protokołu HTTP,
-// za pomocą których klient będzie komunikował żądania do API
+// Obsługuje żądania protokołu HTTP związane z użytkownikiem
 package com.nforge.healthymorningsapi.controller;
 
 import java.util.List;
-
-import com.nforge.healthymorningsapi.payload.EditPasswordRequest;
-import com.nforge.healthymorningsapi.payload.EditProfileRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.nforge.healthymorningsapi.entity.User;
 import com.nforge.healthymorningsapi.service.UserService;
+import com.nforge.healthymorningsapi.payload.EditProfileRequest;
+import com.nforge.healthymorningsapi.payload.EditPasswordRequest;
 
 
 @RequestMapping("/user")

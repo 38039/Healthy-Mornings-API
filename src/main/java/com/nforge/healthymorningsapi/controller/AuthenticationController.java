@@ -1,3 +1,4 @@
+// Obsługuje żądania protokołu HTTP związane z autoryzacją
 package com.nforge.healthymorningsapi.controller;
 
 import org.springframework.http.ResponseEntity;
