@@ -27,13 +27,13 @@ Healthy Mornings to aplikacja wspierająca organizację porannej rutyny, popraw�
 ## 📦 Struktura projektu
 ```
 src
-├── configuration // Konfiguracja projektu, JWT, Spring Security
-├── controller // Endpointy REST
-├── entity // Encje JPA
-├── exception // Niestandardowa obsługa wyjątków
-├── payload // Obiekty DTO do komunikacji
-├── repository // Repozytoria JPA
-└── service // Logika biznesowa
+├── configuration    // Konfiguracja projektu, JWT, Spring Security
+├── controller       // Endpointy REST
+├── entity           // Encje JPA
+├── exception        // Niestandardowa obsługa wyjątków
+├── payload          // Obiekty DTO do komunikacji
+├── repository       // Repozytoria JPA
+└── service          // Logika biznesowa
 ```
 
 ---
