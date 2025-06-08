@@ -1,6 +1,5 @@
 // Obsługuje żądania protokołu HTTP związane z autoryzacją
 package com.nforge.healthymorningsapi.controller;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +28,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegistrationRequest request) {
         User registeredUser = authenticationService.signup(request);
+        authenticationService.generateStatisticsEntry(registeredUser);
 
         return ResponseEntity.ok(registeredUser);
     }

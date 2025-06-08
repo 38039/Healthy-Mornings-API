@@ -1,7 +1,9 @@
 package com.nforge.healthymorningsapi.service;
 
 import com.nforge.healthymorningsapi.entity.Level;
+import com.nforge.healthymorningsapi.entity.UserStatistics;
 import com.nforge.healthymorningsapi.exception.ExistingUserException;
+import com.nforge.healthymorningsapi.repository.UserStatisticsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,17 +21,21 @@ public class AuthenticationService {
     private final PasswordEncoder       passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final UserStatisticsRepository userStatisticsRepository;
 
     public AuthenticationService(
-            UserRepository userRepository,
             AuthenticationManager authenticationManager,
             PasswordEncoder passwordEncoder,
-            UserService userService) {
+            UserService userService,
+            UserRepository userRepository,
+            UserStatisticsRepository userStatisticsRepository
+    ) {
         this.userRepository         = userRepository;
         this.passwordEncoder        = passwordEncoder;
         this.authenticationManager  = authenticationManager;
+        this.userService            = userService;
+        this.userStatisticsRepository = userStatisticsRepository;
         System.out.println("[!] HM-API: (AuthenticationService) Inicjalizacja serwisu obsługi uwierzytelniania użytkownika");
-        this.userService = userService;
     }
 
     // Czy nie lepiej przenieść to do UserService?
@@ -53,6 +59,16 @@ public class AuthenticationService {
         user.setLevel(level);
 
         return userRepository.save(user);
+    }
+
+    public void generateStatisticsEntry(User user) {
+        UserStatistics stats = UserStatistics.builder()
+                .user(user)
+                .tasksActive((short) 0)
+                .tasksCompleted((short) 0)
+                .build();
+
+        userStatisticsRepository.save(stats);
     }
 
     public User authenticate(AuthorizationRequest request) {
