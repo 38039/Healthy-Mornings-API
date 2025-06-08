@@ -46,15 +46,15 @@ src
    cd healthy-mornings-api
    ```
 2. Skonfiguruj połączenie z bazą danych (np. w application.yml lub application.properties):
-```
-spring.datasource.url=jdbc:postgresql://localhost:5432/healthy_mornings
-spring.datasource.username=postgres
-spring.datasource.password=haslo
-```
+   ```
+   spring.datasource.url=jdbc:postgresql://localhost:5432/healthy_mornings
+   spring.datasource.username=postgres
+   spring.datasource.password=haslo
+   ```
 3. Uruchom projekt:
-```
-./mvnw spring-boot:run
-```
+   ```
+   ./mvnw spring-boot:run
+   ```
 
 ---
 
