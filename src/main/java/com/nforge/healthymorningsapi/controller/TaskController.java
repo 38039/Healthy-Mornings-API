@@ -24,7 +24,16 @@ public class TaskController {
         System.out.println("[!] HM-API: (TaskController) Inicjalizacja kontrolera zadań");
     }
 
-    @GetMapping("/all")
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getUserTask(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        Task task = taskService.getUserTask(currentUser, id);
+        return ResponseEntity.ok(task);
+    }
+
+    @GetMapping("/")
     public ResponseEntity<List<Task>> getUserTasks() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();

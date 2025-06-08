@@ -38,8 +38,14 @@ public class TaskService {
         return tasks;
     }
 
+    public Task getUserTask(User user, Long id) {
+        return taskRepository.findByUsersAndId(user, id)
+                .orElseThrow(() -> new RuntimeException("Zadanie o podanej relacji nie istnieje"));
+    }
+
     public List<Task> getAllUserTasks(User user) {
-        return taskRepository.findByUsers(user);
+        return taskRepository.findByUsers(user)
+                .orElseThrow(() -> new RuntimeException("Użytkownik o podanych danych nie istnieje"));
     }
 
     public List<Task> addTask(User user, AddTaskRequest request) {
@@ -58,8 +64,7 @@ public class TaskService {
 
         // Po utworzeniu system powinien przypisywać zadanie osobie, która go utworzyła na potrzeby aplikacji
         assignTaskToUser(user, task);
-
-        return taskRepository.findByUsers(user);
+        return getAllUserTasks(user);
     }
 
     public void assignTaskToUser(User user, Task task) {
