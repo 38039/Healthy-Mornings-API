@@ -1,10 +1,9 @@
 package com.nforge.healthymorningsapi.entity;
-
+import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
 
 
 @Entity @NoArgsConstructor @AllArgsConstructor @Builder @Getter @Setter

@@ -1,25 +1,25 @@
 // Obsługuje logikę zadań
 package com.nforge.healthymorningsapi.service;
-
 import java.time.LocalDateTime;
 import java.util.*;
-
-import com.nforge.healthymorningsapi.entity.UserTask;
-import com.nforge.healthymorningsapi.payload.AddTaskRequest;
-import com.nforge.healthymorningsapi.repository.UserTaskRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import com.nforge.healthymorningsapi.entity.Task;
 import com.nforge.healthymorningsapi.entity.User;
+import com.nforge.healthymorningsapi.entity.UserTask;
+import com.nforge.healthymorningsapi.payload.AddTaskRequest;
 import com.nforge.healthymorningsapi.repository.TaskRepository;
+import com.nforge.healthymorningsapi.repository.UserTaskRepository;
 
 
 @Service
 public class TaskService {
+    private final LevelService levelService;
     private final TaskRepository taskRepository;
     private final UserTaskRepository userTaskRepository;
 
-    public TaskService(TaskRepository taskRepository, UserTaskRepository userTaskRepository) {
+    public TaskService(TaskRepository taskRepository, UserTaskRepository userTaskRepository, LevelService levelService) {
+        this.levelService = levelService;
         this.taskRepository = taskRepository;
         this.userTaskRepository = userTaskRepository;
         System.out.println("[!] HM-API: (TaskService) Inicjalizacja serwisu zadań");
@@ -32,10 +32,7 @@ public class TaskService {
     }
 
     public List<Task> getAllTasks() {
-        List<Task> tasks = new ArrayList<>();
-        taskRepository.findAll().forEach(tasks::add);
-
-        return tasks;
+        return new ArrayList<>(taskRepository.findAll());
     }
 
     public Task getUserTask(User user, Long id) {
@@ -98,8 +95,13 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Task not assigned to user"));
 
         userTask.setStatus(status);
-        // Nie przemyślałem tego, zamiast ustawiać jakieś zbędne checki mogłem zmienić po prostu nazwę atrybutu na updatedAt
-        userTask.setCompletedAt(LocalDateTime.now());
+
+        // Przydałoby się jeszcze dodać updatedAt
+        if(status.equals("completed")) {
+            user.setPoints(user.getPoints() + task.getPointsReward());
+            levelService.updateUserLevel(user);
+            userTask.setCompletedAt(LocalDateTime.now());
+        }
 
         userTaskRepository.save(userTask);
     }

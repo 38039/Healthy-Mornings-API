@@ -24,15 +24,12 @@ public class StatisticService {
         this.userRepository = userRepository;
         this.userTaskRepository = userTaskRepository;
         this.userStatisticsRepository = userStatisticsRepository;
-        System.out.println("[!] HM-API: (TaskService) Inicjalizacja serwisu zadań");
+        System.out.println("[!] HM-API: (TaskService) Inicjalizacja serwisu statystyk");
     }
 
 
     public List<User> allUsers() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-
-        return users;
+        return new ArrayList<>(userRepository.findAll());
     }
 
     @Scheduled(cron = "0 0 2 * * *")

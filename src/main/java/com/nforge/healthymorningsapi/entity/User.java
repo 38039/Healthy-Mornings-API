@@ -1,15 +1,13 @@
 package com.nforge.healthymorningsapi.entity;
-
+import java.util.*;
+import java.time.ZonedDateTime;
+import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.time.ZonedDateTime;
-import java.util.*;
 
 
 @Entity @Data @NoArgsConstructor @AllArgsConstructor @Builder
@@ -69,10 +67,14 @@ public class User implements UserDetails {
     @Size(max = 2048)
     private String avatarUrl;
 
-    // Przydatne w momencie w którym chcielibyśmy wprowadzić funkcjonalność zmiany persmiji użytkowników bezpośrednio w kliencie
+    // Przydatne w momencie, w którym chcielibyśmy wprowadzić funkcjonalność zmiany uprawnień użytkowników bezpośrednio w kliencie
     @Getter @Column(name = "is_admin")
     @NotNull
     private Boolean isAdmin;
+
+    @Getter @Column(name = "points")
+    @NotNull
+    private long points;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)

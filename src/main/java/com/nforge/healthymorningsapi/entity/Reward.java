@@ -1,9 +1,9 @@
 package com.nforge.healthymorningsapi.entity;
-
+import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+
 
 @Entity @NoArgsConstructor @AllArgsConstructor @Builder @Getter @Setter
 @Table(name = "rewards", schema = "application")
