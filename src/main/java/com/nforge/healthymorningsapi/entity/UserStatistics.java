@@ -1,8 +1,9 @@
 package com.nforge.healthymorningsapi.entity;
-
 import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity @NoArgsConstructor @AllArgsConstructor @Builder @Getter @Setter
 @Table(name = "user_statistics", schema = "application")
@@ -12,6 +13,7 @@ public class UserStatistics {
     @Column(name = "id_statistics")
     private Long idStatistics;
 
+    @JsonIgnore
     @JoinColumn(name = "id_user", unique = true)
     @NotNull @OneToOne(fetch = FetchType.LAZY)
     private User user;
