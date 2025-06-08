@@ -3,6 +3,7 @@ package com.nforge.healthymorningsapi.controller;
 
 import java.util.List;
 
+import com.nforge.healthymorningsapi.entity.UserTask;
 import com.nforge.healthymorningsapi.payload.AddTaskRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -47,5 +48,17 @@ public class TaskController {
         List<Task> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
-}
 
+    @PutMapping("/{id}/{status}")
+    public ResponseEntity<UserTask> markTaskAsDone(@PathVariable Long id, @PathVariable String status) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        Task currentTask = taskService.getTask(id);
+
+        taskService.setTaskStatus(currentTask, currentUser, status);
+        UserTask overwrittenRelation = taskService.getUserTaskRelation(currentUser, currentTask);
+
+        return ResponseEntity.ok(overwrittenRelation);
+    }
+
+}

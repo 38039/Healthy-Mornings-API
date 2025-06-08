@@ -2,10 +2,7 @@
 package com.nforge.healthymorningsapi.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.nforge.healthymorningsapi.entity.UserTask;
 import com.nforge.healthymorningsapi.payload.AddTaskRequest;
@@ -28,6 +25,11 @@ public class TaskService {
         System.out.println("[!] HM-API: (TaskService) Inicjalizacja serwisu zadań");
     }
 
+
+    public Task getTask(long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Nie odnaleziono zadania o podanym identyfikatorze"));
+    }
 
     public List<Task> getAllTasks() {
         List<Task> tasks = new ArrayList<>();
@@ -83,5 +85,22 @@ public class TaskService {
         task.getUsers().clear(); // Opcjonalne czyszczenie atrybutu user dla task
 
         taskRepository.delete(task);
+    }
+
+    @Transactional
+    public void setTaskStatus(Task task, User user, String status) {
+        UserTask userTask = userTaskRepository.findByTaskAndUser(task, user)
+                .orElseThrow(() -> new RuntimeException("Task not assigned to user"));
+
+        userTask.setStatus(status);
+        // Nie przemyślałem tego, zamiast ustawiać jakieś zbędne checki mogłem zmienić po prostu nazwę atrybutu na updatedAt
+        userTask.setCompletedAt(LocalDateTime.now());
+
+        userTaskRepository.save(userTask);
+    }
+
+    public UserTask getUserTaskRelation(User user, Task task) {
+        return userTaskRepository.findByTaskAndUser(task, user)
+                .orElseThrow(() -> new RuntimeException("Relacja między użytkownikiem a zadaniem nie istnieje"));
     }
 }
